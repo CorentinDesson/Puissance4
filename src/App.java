@@ -1,5 +1,3 @@
-package puissance4;
-
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -102,33 +100,21 @@ public class App {
     return false;
   }
 
-  public static boolean aGagneDiagMont(int x, int y, int player) {/*
+  public static boolean aGagneDiagMont(int x, int y, int player) {
     int cmpt = 0;
-    if (x > 3 && y < 4) {
-      for (int i = x; x < grille.length;) {
-        for (int j = y; y < grille[x].length;) {
-          if (grille[i][j] == player) {
-            i++;
-            j++;
-            cmpt++;
-          }
-          if (cmpt == 4) {
-            System.out.println();
-            System.out.println(
-              "Partie gangner par le joueure: " + player + " "
-            );
-            return true;
-          }
-          if (cmpt > 0 && grille[i][y] == player + 1) {
-            return false;
-          }
-          if (grille[i][y] == player - 1) {
-            return false;
-          }
+    if (x >= 3 && y <= 3) {
+      do {
+        if (grille[x][y] == player) {
+          cmpt++;
+          x--;
+          y++;
+        } else if (grille[x][y] != player) {
+          return false;
         }
-      }
-      System.out.println("player =" + player + " " + "compte " + cmpt);
-    }*/
+      } while (cmpt != 4);
+
+      return true;
+    }
     return false;
   }
 
@@ -177,13 +163,20 @@ public class App {
   }
 
   public static int selecColum() {
+    return selecColumGri(grille);
+  }
+
+  public static int selecColumGri(int[][] gri) {
     int p1 = -1;
     do {
       p1 = sc.nextInt();
-      if (grille[5][p1] == 0) {
+      if (gri[5][p1] == 0) {
         return p1;
-      } else {
-        System.out.println("Colonne pleinne réessayer ");
+      } else if (p1 > 6 || p1 < 0) {
+        System.out.println("Colonne inexistante, réessayer !");
+        p1 = -1;
+      } else if (gri[5][p1] != 0) {
+        System.out.println("Colonne pleinne réessayer !");
         p1 = -1;
       }
     } while (p1 == -1);
@@ -197,8 +190,8 @@ public class App {
       System.out.println(" ");
       System.out.println("Tour du Player 1 ");
 
-      //jouer(1, selecColum());
-      jouer(1, jouecoupRandom());
+      jouer(1, selecColum());
+      //jouer(1, jouecoupRandom());
       affichage();
       if (aGagner(1) == true || matchNull() == true) {
         break;
@@ -206,8 +199,8 @@ public class App {
       System.out.println(" ");
 
       System.out.println("Tour du Player 2 ");
-      jouer(2, jouecoupRandom());
-      //jouer(2, selecColum());
+      //jouer(2, jouecoupRandom());
+      jouer(2, selecColum());
       affichage();
       if (aGagner(2) == true || matchNull() == true) {
         break;
